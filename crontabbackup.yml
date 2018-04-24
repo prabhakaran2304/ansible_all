@@ -1,0 +1,22 @@
+- hosts: allprd
+  tasks:
+  - name: crontab backup for root user
+    shell: sudo crontab -l  > cron_backup_$(hostname)_$(date +"%m_%d_%Y").txt
+    args:
+      chdir: /home/infrausr/
+
+  - name: find the cron backup output file
+    find:
+      paths: /home/infrausr
+      recurse: no
+      patterns: "cron_backup_*.txt"
+    register: files_to_copy
+
+  - name: remote cron bck file report copy to local machine
+    fetch: src={{ item.path }} dest=/home/cronbck/ flat=yes
+    with_items: "{{ files_to_copy.files }}"
+
+  - name: removing crontab backfile 
+    file: 
+      path: /home/infrausr
+      state: absent
