@@ -1,0 +1,35 @@
+- hosts: ecomdev
+  tasks:
+  - name: lynis tar file copy directory to the remote servers
+    copy:
+      src: /home/lynis-2.5.5.tar.gz
+      dest: /home 
+
+  - name: Unarchive a lynis file on the remote machine
+    unarchive:
+      src: /home/lynis-2.5.5.tar.gz
+      dest: /home
+      remote_src: yes
+ 
+  - name: removing lynis-2.5.5.tar.gz file
+    file: path=/home/lynis-2.5.5.tar.gz state=absent
+
+  - name: lynis audit script running 
+    shell: ./lynis audit system > scanlynis_$(date +"%m_%d_%Y")_$(hostname).txt
+    args:
+      chdir: /home/lynis/
+
+  - name: find the lynis output file
+    find:
+      paths: /home/lynis
+      recurse: no
+      patterns: "*.txt"
+    register: files_to_copy
+
+  - name: remote lynis report copy to local machine
+    fetch: src={{ item.path }} dest=/home/lynisoutput/ flat=yes
+    with_items: "{{ files_to_copy.files }}"
+
+  - name: removing lynis script and reports
+    file: path=/home/lynis/ state=absent
+
