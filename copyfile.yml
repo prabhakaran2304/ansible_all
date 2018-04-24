@@ -1,0 +1,10 @@
+- hosts: allprd
+  user: infrausr
+  become: yes
+  tasks: 
+  - copy:
+      src: /home/infrausr/timealert.sh
+      dest: /home/kamal
+  - file:
+      path: /home/kamal/timealert.sh
+      mode: 0777
