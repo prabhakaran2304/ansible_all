@@ -1,0 +1,17 @@
+- hosts: test
+  user: infrausr
+  become: yes
+  tasks: 
+  - name: Copy rpm file to server
+    copy:
+      src: /home/rpm/pmm-client-1.3.2-1.x86_64.rpm
+      dest: /home/infrausr
+	  
+  - name: Install package.
+    yum:
+      name: /home/infrausr/pmm-client-1.3.2-1.x86_64.rpm
+      state: present
+
+  - name: removing pmm-client-1.3.2-1.x86_64.rpm file
+    file: path=/home/infrausr/pmm-client-1.3.2-1.x86_64.rpm state=absent
+	 
