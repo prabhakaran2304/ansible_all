@@ -1,0 +1,15 @@
+- hosts: allprd
+  tasks:
+  - name: Ansible lineinfile multiple lines with_items example
+    lineinfile:
+      dest: "{{ item.dest }}"
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+      backrefs: yes
+    with_items:
+      - {dest: '/etc/rsyslog.conf', regexp: '#*.* @@remote-host:514', line: '*.* @@10.61.2.222:514'}
+
+  - name: Ansible systemd service restart example
+    service:
+      name: rsyslog
+      state: restarted
