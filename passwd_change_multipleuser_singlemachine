@@ -1,0 +1,32 @@
+---
+- name: Set Password
+  hosts: test
+  user: adminuser
+  become: yes
+  ignore_errors: yes
+  vars:
+    - usernames: 
+      - user1
+      - user2
+      - user3
+      - adminuser	  
+	 
+  tasks:
+  - shell: getent passwd {{ usernames }} | wc -l | tr -d ' '
+    register: user_exists
+    ignore_errors: true 
+
+  - debug:  
+      var: user_exists
+
+  - name: change password 
+    user: name=user1 update_password=always password="$1$3Zdze7fgyhtytyr564560Y.ZGQUuXLv."
+    when: user_exists.rc == 0
+
+  - name: change password 
+    user: name=user2 update_password=always password="$1$3Zd4356457654fghfgh0g5z2AXoI3GwfbH/"
+    when: user_exists.rc == 0
+    
+  - name: change password 
+    user: name=user3 update_password=always password="$1$3Zdze74r56476ty56z2AXoI3GwfbH/"
+    when: user_exists.rc == 0
