@@ -1,0 +1,41 @@
+#!/bin/bash
+
+yum install -y http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm --enablerepo=extras 
+
+yum install -y ansible vim docker git make python-pip lvm2 --enablerepo=extras 
+
+yum update -y
+
+pip install docker-py
+
+pvcreate /dev/xvdf
+
+vgcreate vg_awx /dev/xvdf
+
+lvcreate -l 100%FREE vg_awx -n lv_awx
+
+mkfs.ext4 /dev/vg_awx/lv_awx
+
+mkdir /awx
+
+mount /dev/vg_awx/lv_awx /awx
+
+echo '/dev/vg_awx/lv_awx /awx ext4 defaults 0 2' >> /etc/fstab
+
+systemctl start docker
+
+systemctl enable docker
+
+cd /awx
+
+git clone https://github.com/ansible/awx.git
+
+git clone https://github.com/ansible/awx-logos.git
+
+cd awx/installer
+
+sed -i 's/awx_official=false/awx_official=true/' inventory
+
+ansible-playbook -i inventory install.yml
+
+docker logs -f awx_task
