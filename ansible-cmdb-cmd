@@ -1,0 +1,6 @@
+ansible -i hosts -m setup --tree out/ all
+
+ansible-cmdb -t html_fancy_split -p local_js=1 out/
+
+ansible-cmdb -t csv out > overview.csv
+
