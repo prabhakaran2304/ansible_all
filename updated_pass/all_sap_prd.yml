@@ -1,0 +1,39 @@
+---
+- name: Set Password
+  hosts: allsap
+  user: infrausr
+  become: yes
+  ignore_errors: yes
+  vars:
+    - { kamal_pass: '$1$3Zdze7Vx$Ayy9wBZ/MyYabRWO5Dr8M1' }
+    - { adminusr_pass: '$1$3Zdze7Vx$Ayy9wBZ/MyYabRWO5Dr8M1' }
+    - { root_pass: '$1$3Zdze7Vx$Ayy9wBZ/MyYabRWO5Dr8M1' } 
+
+  tasks:
+  - name: kamal user exists or not
+    shell: getent passwd kamal
+    register: user_exists_kamal
+    ignore_errors: true 
+
+  - name: change password for kamal
+    user: name=kamal update_password=always password="{{ kamal_pass }}"
+    when: user_exists_kamal.rc == 0
+
+  - name: adminusr user exists or not
+    shell: getent passwd adminusr
+    register: user_exists_adminusr
+    ignore_errors: true 
+
+  - name: change password for adminusr
+    user: name=adminusr update_password=always password="{{ adminusr_pass }}"
+    when: user_exists_adminusr.rc == 0
+
+  - name: root user exists or not
+    shell: getent passwd root
+    register: user_exists_root
+    ignore_errors: true
+
+  - name: change password for root
+    user: name=root update_password=always password="{{ root_pass }}"
+    when: user_exists_root.rc == 0
+

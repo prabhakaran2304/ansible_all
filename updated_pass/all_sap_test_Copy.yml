@@ -1,0 +1,45 @@
+---
+- name: Set Password
+  hosts: test
+  user: infrausr
+  become: yes
+  ignore_errors: yes
+  vars_files:
+    - /etc/ansible/playbooks/passwordfiles/updated_pass/pass.yml
+
+  tasks:
+  - name: kamal user exists or not
+    shell: getent passwd kamal
+    register: user_exists_kamal
+    ignore_errors: true 
+
+  - name: change password for kamal
+    user: name=kamal update_password=always password="{{ vault_kamal_pass }}"
+    when: user_exists_kamal.rc == 0
+
+  - name: adminusr user exists or not
+    shell: getent passwd adminusr
+    register: user_exists_adminusr
+    ignore_errors: true 
+
+  - name: change password for adminusr
+    user: name=adminusr update_password=always password="{{ vault_adminusr_pass }}"
+    when: user_exists_adminusr.rc == 0
+
+  - name: root user exists or not
+    shell: getent passwd root
+    register: user_exists_root
+    ignore_errors: true
+
+  - name: change password for root
+    user: name=root update_password=always password="{{ vault_root_pass }}"
+    when: user_exists_user1.rc == 0
+
+  - name: test1 user exists or not
+    shell: getent passwd test1
+    register: user_exists_test1
+    ignore_errors: true
+
+  - name: change password for test1
+    user: name=test1 update_password=always password="{{ vault_test1_pass }}"
+    when: user_exists_test1.rc == 0
