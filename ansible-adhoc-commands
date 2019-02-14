@@ -1,0 +1,18 @@
+
+##############################################################################################################################################
+zabbix package installation suse linux :- 
+ansible -i hosts hana -m copy -a "src=/home/infrausr/rpms/zabbix-agent-4.0.4-1.el12.x86_64.rpm dest=/home/infrausr/zabbix-agent-4.0.4-1.el12.x86_64.rpm" -k
+ansible hana -m file -a "path=/home/infrausr/zabbix-agent-4.0.4-1.el12.x86_64.rpm  mode=0777" -k
+ansible -i hosts hana -m shell -a "sudo rpm -ivh /home/infrausr/zabbix-agent-4.0.4-1.el12.x86_64.rpm "
+ansible -i hosts hana -m copy -a "src=/home/infrausr/rpms/zabbix_agentd.conf dest=/etc/zabbix/zabbix_agentd.conf" 
+ansible -i hosts hana -m service -a 'name=zabbix-agent state=started enabled=yes'
+ansible -i hosts hana -m service -a 'name=zabbix-agent state=restarted'
+###############################################################################################################################################
+ansible -i hosts hana -m shell -a "systemctl status multipathd" -k
+ansible -i hosts ecomsar -m shell -a "tail /sar/*_201901{22,23,24,25,26,27,28,29,30,31}.xls | grep -i "Average" " -k
+ansible -i hosts sapprd -m shell -a "hostname"
+###################################################################################################################################
+windows ansible 
+ansible win -i hosts -m win_ping -k 
+ansible win -i hosts -m win_user -a "name=user password=setname" -k 
+####################################################################################################################################
