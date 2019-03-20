@@ -1,0 +1,12 @@
+---
+- name: lvcreate
+  hosts: newins
+  user: infrausr
+  become: yes
+  ignore_errors: yes
+
+  tasks:
+  #Create a logical volume of 512g.
+  - lvol: vg=system lv=usrsap size=50g
+  - lvol: vg=system lv=sapmnt size=100g
+  - lvol: vg=system lv=usrsaptrans size=100g
