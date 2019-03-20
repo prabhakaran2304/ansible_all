@@ -1,0 +1,8 @@
+#
+#This will update ssh banner
+#
+---
+- hosts: newhana
+  become: yes
+  roles:
+  - ssh-banner

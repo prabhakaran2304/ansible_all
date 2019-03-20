@@ -1,0 +1,15 @@
+---
+- name: Adding banner info in sshd.conf
+  lineinfile: dest=/etc/ssh/sshd_config regexp='#Banner none' line="Banner /etc/issue"
+  tags:
+    - ssh-banner-configuration
+
+- name: Update ssh banner
+  template: src=ssh-banner.j2 dest=/etc/issue
+  tags:
+    - ssh-banner-configuration
+
+- name: Restart ssh
+  shell: sleep 3; systemctl restart sshd
+  async: 1
+  poll: 0
