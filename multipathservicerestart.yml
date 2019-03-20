@@ -1,0 +1,16 @@
+- hosts: hana
+  user: infrausr
+  become: yes
+  ignore_errors: yes
+
+  tasks:
+
+  - name: multipath service restart
+    service:
+      name: multipathd
+      state: restarted
+
+  - name: multipath server enable onboot
+    service: 
+      name: multipathd
+      enabled: yes

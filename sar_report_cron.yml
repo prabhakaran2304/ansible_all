@@ -1,0 +1,21 @@
+- hosts: 10.61.3.77
+  tasks:
+  - name: sar directory 
+    file: 
+      dest: /sar
+      mode: 755
+      state: directory
+
+  - name: copy sar scripts
+    copy: src={{ item.src }} dest={{ item.dest }} mode=755
+    with_items:
+      - {src: '/etc/ansible/files/kamalsar.sh', dest: '/sar/kamalsar.sh'}
+      - {src: '/etc/ansible/files/kamalsarf.sh', dest: '/sar/kamalsarf.sh'}
+      - {src: '/etc/ansible/files/timealert.sh', dest: '/home/kamal/timealert.sh'}     
+ 
+  - name: cron set
+    cron: name={{item.name}} minute={{item.minute}}  hour={{item.hour}} user={{item.user}} job={{item.job}}
+    with_items:
+      - {name: 'Sar-Reports', minute: '04', hour: '0', user: 'root', job: '/sar/kamalsar.sh'}
+      - {name: 'Sar-Reports-xls', minute: '55', hour: '23', user: 'root', job: '/sar/kamalsarf.sh'}
+      - {name: 'Timealert-Ftp', minute: '*/15', hour: '*', user: 'root', job: '/home/kamal/timealert.sh'} 
