@@ -1,0 +1,7 @@
+- hosts: allsap
+  tasks:
+    - name: Inserting a line after a pattern in Ansible example 
+      lineinfile:
+        path: ~/.bash_profile
+        line: HISTTIMEFORMAT= "%d/%m/%y %T "
+        insertafter: EOF
