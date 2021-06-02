@@ -1,4 +1,4 @@
-- hosts: newhana
+- hosts: newhost
   tasks:
   - name: adding several users
     user:
@@ -11,6 +11,6 @@
       update_password=on_create
       createhome=yes
     with_items:
-      - { name: 'kamal', comment: 'kamal', password: '$1$3Zdze7Vx$GfSfGI5TkePOrzrFCemgw.' }
+      - { name: 'noramlusr', comment: 'normalusr', password: '$1$3Zdze7Vx$GfSfGI5TkePOrzrFCemgw.' }
       - { name: 'adminusr', comment: 'adminusr', password: '$1$3Zdze7Vx$0SFgKzoAwTg5WI1ITShvs1' }
       - { name: 's4admin', comment: 's4admin', password: '$1$3Zdze7Vx$10d2.WLuMzZT/qv1CFVkf0' } 
